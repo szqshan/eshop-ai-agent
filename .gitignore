@@ -1,0 +1,8 @@
+# 敏感信息
+GitHub 信息.txt
+*.txt
+
+# 系统文件
+.claude/
+Thumbs.db
+desktop.ini
