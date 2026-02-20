@@ -2,7 +2,8 @@
 GitHub 信息.txt
 *.txt
 
-# 系统文件
-.claude/
+# 系统文件（只排除配置，保留 skills）
+.claude/settings*
+.claude/*.json
 Thumbs.db
 desktop.ini
