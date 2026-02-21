@@ -7,7 +7,8 @@ description: 跨境电商 AI Agent 共创协作技能。当用户说「发消息
 
 - **GitHub 仓库**: https://github.com/szqshan/eshop-ai-agent
 - **核心文件**: `电商知识库/痛点_问题_需求/职能痛点矩阵.md`
-- **飞书群**: 电商-AI-agent特战队（chat_id: `oc_32bdbb2cb70ddc197525f893483f21fa`）
+- **飞书群**: 电商AI-agent特战队（chat_id: `oc_ea4a789a0305af2d0fb8c99bea026afd`）
+- **飞书 MCP**: `pm-agent`
 - **当前阶段**: 第一步——痛点收集
 
 ## 初始化（首次使用必做）
@@ -80,8 +81,8 @@ git -C "$REPO" push origin master
 用户说「通知群里」「给群发消息」时：
 
 ```
-工具：mcp__lark-mcp__im_v1_message_create
-chat_id：oc_32bdbb2cb70ddc197525f893483f21fa
+工具：mcp__pm-agent__im_v1_message_create
+chat_id：oc_ea4a789a0305af2d0fb8c99bea026afd
 msg_type：text
 ```
 
@@ -92,8 +93,8 @@ msg_type：text
 用户说「看看群里说什么」「读取群消息」时：
 
 ```
-工具：mcp__lark-mcp__im_v1_message_list
-container_id：oc_32bdbb2cb70ddc197525f893483f21fa
+工具：mcp__pm-agent__im_v1_message_list
+container_id：oc_ea4a789a0305af2d0fb8c99bea026afd
 container_id_type：chat
 page_size：10          ← 默认只读10条，避免上下文爆炸
 sort_type：ByCreateTimeDesc
