@@ -1,6 +1,14 @@
 # 敏感信息
 GitHub 信息.txt
 *.txt
+bot/.env
+
+# Python 运行时文件
+__pycache__/
+*.pyc
+*.pyo
+bot/.bot.pid
+bot/bot.log
 
 # 系统文件（只排除配置，保留 skills）
 .claude/settings*
