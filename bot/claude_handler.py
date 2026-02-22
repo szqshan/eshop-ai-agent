@@ -120,10 +120,17 @@ def _call_with_retry(client, model: str, messages: list) -> object:
                 raise
 
 
-def run_agent(user_message: str) -> str:
+def run_agent(user_message: str, context: str = "") -> str:
     """带工具调用的 agent loop。支持多轮工具调用直至 end_turn，500/529 自动重试+降级。"""
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, base_url=ANTHROPIC_BASE_URL)
-    messages = [{"role": "user", "content": user_message}]
+    if context.strip():
+        content = (
+            f"[群内近期讨论（最近30分钟，仅供参考）]\n{context}\n\n"
+            f"[当前提问]\n{user_message}"
+        )
+    else:
+        content = user_message
+    messages = [{"role": "user", "content": content}]
 
     for _ in range(MAX_AGENT_TURNS):
         last_error = None

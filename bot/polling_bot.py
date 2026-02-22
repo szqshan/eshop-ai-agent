@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 POLL_INTERVAL = 5          # 秒
 PAGE_SIZE = 10             # 每次拉多少条
 _seen_ids: deque = deque(maxlen=DEDUP_CACHE_SIZE)
+_context_buffer: deque = deque(maxlen=50)
 
 
 def get_token() -> str:
@@ -81,6 +82,49 @@ def extract_text(msg: dict) -> str:
         return ""
 
 
+def _resolve_sender_name(msg: dict) -> str:
+    """尽量从消息对象里提取发送者显示名。"""
+    sender = msg.get("sender", {})
+    sender_id = sender.get("id", "")
+    if sender.get("sender_type") == "app":
+        return "pm-agent"
+    return f"成员_{sender_id[-6:]}" if sender_id else "群成员"
+
+
+def _update_context_buffer(msg: dict) -> None:
+    """把拉到的每条消息存入上下文缓冲区。"""
+    try:
+        text = extract_text(msg)
+        if not text:
+            return
+        sender = msg.get("sender", {})
+        is_bot = sender.get("id") == FEISHU_APP_ID
+        _context_buffer.append({
+            "message_id": msg["message_id"],
+            "sender_id":  sender.get("id", ""),
+            "sender_name": _resolve_sender_name(msg),
+            "text":        text[:150],
+            "is_bot":      is_bot,
+            "timestamp":   int(msg.get("create_time", "0")) / 1000,
+        })
+    except Exception:
+        pass
+
+
+def build_context(exclude_message_id: str) -> str:
+    """返回最近10条、30分钟内的群消息，格式化为上下文字符串。"""
+    now = time.time()
+    lines = []
+    for entry in list(_context_buffer):
+        if entry["message_id"] == exclude_message_id:
+            continue
+        if now - entry["timestamp"] > 1800:  # 30分钟
+            continue
+        lines.append(f"[{entry['sender_name']}]: {entry['text']}")
+    recent = lines[-10:]  # 最近10条
+    return "\n".join(recent)
+
+
 def process_message(msg: dict) -> None:
     message_id = msg["message_id"]
     if message_id in _seen_ids:
@@ -98,7 +142,8 @@ def process_message(msg: dict) -> None:
 
     logger.info("处理消息 id=%s text=%r", message_id, text)
     try:
-        reply = run_agent(text)
+        context = build_context(exclude_message_id=message_id)
+        reply = run_agent(text, context=context)
         reply_message(message_id, reply)
         logger.info("已回复: %r", reply[:80])
     except Exception:
@@ -135,6 +180,7 @@ def main() -> None:
 
             msgs = fetch_messages(token)
             for msg in reversed(msgs):   # 按时间正序处理
+                _update_context_buffer(msg)
                 process_message(msg)
 
         except Exception:
