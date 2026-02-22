@@ -107,6 +107,21 @@ TOOLS = [
         },
     },
     {
+        "name": "delete_pain_point",
+        "description": (
+            "从成员痛点文件中删除指定编号的痛点卡片，并自动重新编号。"
+            "删除后建议调用 git_push 推送到 GitHub。"
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "submitter": {"type": "string", "description": "成员昵称，如「木易」"},
+                "pain_number": {"type": "integer", "description": "要删除的痛点编号（从1开始）"},
+            },
+            "required": ["submitter", "pain_number"],
+        },
+    },
+    {
         "name": "send_file",
         "description": (
             "将知识库中的文件发送到飞书「电商AI-agent特战队」群。"
@@ -271,6 +286,39 @@ def _send_notification(text: str) -> str:
     return "通知已发送到飞书群。"
 
 
+def _delete_pain_point(submitter: str, pain_number: int) -> str:
+    """从成员痛点文件中删除指定编号的痛点卡片，并重新编号。"""
+    import re
+    member_file = os.path.join(KB_MEMBER_DIR, f"{submitter}.md")
+    if not os.path.exists(member_file):
+        available = [f.replace(".md", "") for f in os.listdir(KB_MEMBER_DIR) if f.endswith(".md")]
+        return f"未找到成员「{submitter}」的文件，现有成员：{available}"
+
+    with open(member_file, encoding="utf-8") as f:
+        content = f.read()
+
+    # 按 "## 痛点 N" 分割：sections[0] 是文件头，之后每个元素是一条痛点
+    sections = re.split(r'(?=## 痛点 \d+)', content)
+    header = sections[0]
+    pain_sections = [s for s in sections[1:] if re.match(r'## 痛点 \d+', s)]
+
+    if pain_number < 1 or pain_number > len(pain_sections):
+        return f"痛点编号 {pain_number} 不存在（{submitter} 共有 {len(pain_sections)} 条痛点）"
+
+    # 提取被删除条目的标题
+    title_match = re.search(r'\*\*(.*?)\*\*', pain_sections[pain_number - 1])
+    deleted_title = title_match.group(1) if title_match else f"第 {pain_number} 条"
+
+    # 移除目标条目并重新编号
+    remaining = [s for i, s in enumerate(pain_sections) if i != pain_number - 1]
+    renumbered = [re.sub(r'^## 痛点 \d+', f'## 痛点 {i}', s) for i, s in enumerate(remaining, 1)]
+
+    with open(member_file, encoding="utf-8", mode="w") as f:
+        f.write(header + "".join(renumbered))
+
+    return f"已删除「{submitter}」的痛点「{deleted_title}」（原编号 {pain_number}），剩余 {len(remaining)} 条。"
+
+
 def _send_file(file_path: str) -> str:
     """上传本地文件到飞书并发送到群。file_path 相对于 电商知识库/ 目录。"""
     import json
@@ -365,6 +413,8 @@ def execute_tool(name: str, inputs: dict) -> str:
             return _git_push(**inputs)
         elif name == "send_notification":
             return _send_notification(**inputs)
+        elif name == "delete_pain_point":
+            return _delete_pain_point(**inputs)
         elif name == "send_file":
             return _send_file(**inputs)
         elif name == "web_search":
