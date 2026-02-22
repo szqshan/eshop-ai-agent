@@ -338,9 +338,9 @@ def _send_file(file_path: str) -> str:
 def _web_search(query: str, max_results: int = 3) -> str:
     max_results = min(max(1, max_results), 5)
     try:
-        from duckduckgo_search import DDGS
+        from ddgs import DDGS
     except ImportError:
-        return "duckduckgo-search 未安装，请运行：pip install duckduckgo-search>=6.0.0"
+        return "ddgs 未安装，请运行：pip install ddgs"
 
     results = []
     with DDGS() as ddgs:

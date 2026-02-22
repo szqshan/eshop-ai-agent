@@ -1,6 +1,5 @@
 # 敏感信息
 GitHub 信息.txt
-*.txt
 bot/.env
 
 # Python 运行时文件
