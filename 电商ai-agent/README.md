@@ -25,33 +25,30 @@
     - **言简意赅**：内容要精炼，重点突出，便于阅读和执行。
     - **系统化**：报告内容将作为开发 6 大 Agent 系统的基础需求文档。
 
-## 如何使用 Trae / Claude Code 更新文档
-本项目推荐使用 AI 辅助工具（如 **Trae** 或 **Claude Code**）来自动化维护和更新文档。
+## 如何使用 Trae / Claude Code 全自动更新文档
+本项目推荐使用 AI 辅助工具（如 **Trae** 或 **Claude Code**）来全自动维护和更新文档。**你不需要离开 AI 界面，也不需要手动打开 GitHub 网页。**
 
-### 1. 准备工作
-1.  **Fork 仓库**：在 GitHub 页面点击 "Fork" 按钮，将本项目复制到你的账号下。
-2.  **Clone 到本地**：
-    ```bash
-    git clone https://github.com/你的用户名/eshop-ai-agent.git
-    cd eshop-ai-agent/电商ai-agent
-    ```
-3.  **打开工具**：使用 Trae 打开项目文件夹，或在终端启动 Claude Code。
+### 前提条件
+请确保你的环境中安装了 GitHub CLI (`gh`) 并已登录。
+*   如果没有安装，请告诉 AI："请帮我检查并安装 GitHub CLI。"
+*   如果没有登录，请告诉 AI："请帮我登录 GitHub CLI。"
 
-### 2. AI 交互流程
-请按照以下步骤指挥 AI 进行更新，**不要手动修改文件**：
+### 全自动交互流程
+请直接在对话框中指挥 AI 完成以下步骤：
 
-1.  **让 AI 理解规则**：
-    *   告诉 AI："请先阅读 `README.md`，了解维护指南，特别是关于 `FEEDBACK.md` 的使用规则。"
-2.  **提交反馈或修改**：
-    *   **如果是反馈问题**：告诉 AI："请将我对场景 X 的意见 [你的意见内容] 添加到 `FEEDBACK.md` 中。"
-    *   **如果是修正错误**（需确保已确认可行）：告诉 AI："请根据 `FEEDBACK.md` 中的确认项，修正 `01_选品研究报告.md` 中的数据错误，并保持格式一致。"
-3.  **自动化提交**：
-    *   让 AI 执行 Git 操作："请将修改提交到 Git，Commit 信息为 'docs: update feedback for scenario X'，并 Push 到远程仓库。"
+1.  **初始化与获取项目** (如果你还没有下载项目)：
+    > "请帮我 Fork 并 Clone `szqshan/eshop-ai-agent` 这个仓库到本地，然后进入 `电商ai-agent` 目录。"
 
-### 3. 提交 Pull Request
-1.  回到 GitHub 的原始仓库页面。
-2.  你会看到 "Compare & pull request" 的提示，点击它。
-3.  填写描述，提交 PR 等待合并。
+2.  **创建分支并修改**：
+    > "请创建一个新分支 `fix/场景1数据修正`。然后请阅读 `README.md` 了解规则，将我对场景 1 的反馈 [你的具体意见] 添加到 `FEEDBACK.md` 中。"
+
+3.  **提交与发布 (PR)**：
+    > "请将修改提交到 Git，Commit 信息为 'docs: update feedback'。然后请使用 GitHub CLI (`gh`) 帮我推送到远程仓库并自动创建一个 Pull Request，标题为 '修正场景1数据'。"
+
+**注意**：
+*   **不要手动修改文件**：一切交给 AI。
+*   **不要打开浏览器**：AI 可以通过命令行工具直接与 GitHub 交互。
+*   **遇到冲突**：如果 AI 提示冲突，请告诉它："请帮我同步上游仓库并解决冲突。"
 
 ## 下一步计划
 - 收集并修正报告中的问题。
