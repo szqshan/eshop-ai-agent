@@ -25,24 +25,33 @@
     - **言简意赅**：内容要精炼，重点突出，便于阅读和执行。
     - **系统化**：报告内容将作为开发 6 大 Agent 系统的基础需求文档。
 
-## 如何使用 GitHub 更新文档
-我们鼓励大家通过 GitHub 平台参与文档的维护和更新。
+## 如何使用 Trae / Claude Code 更新文档
+本项目推荐使用 AI 辅助工具（如 **Trae** 或 **Claude Code**）来自动化维护和更新文档。
 
-1.  **提交反馈 (Feedback)**:
-    - 推荐方式：直接编辑 `FEEDBACK.md` 文件。
-    - 在 GitHub 页面上找到 `FEEDBACK.md`，点击右上角的✏️图标进行编辑。
-    - 添加你的反馈内容后，点击 "Commit changes" 提交。
+### 1. 准备工作
+1.  **Fork 仓库**：在 GitHub 页面点击 "Fork" 按钮，将本项目复制到你的账号下。
+2.  **Clone 到本地**：
+    ```bash
+    git clone https://github.com/你的用户名/eshop-ai-agent.git
+    cd eshop-ai-agent/电商ai-agent
+    ```
+3.  **打开工具**：使用 Trae 打开项目文件夹，或在终端启动 Claude Code。
 
-2.  **修改报告 (Reports)**:
-    - **严禁直接修改** `01_xxx.md` 等核心报告文件。
-    - 请先在 `FEEDBACK.md` 中讨论，确认修改方案。
-    - 确认后的修改，请通过 **Pull Request (PR)** 的方式提交：
-        1. Fork 本仓库。
-        2. 在你的分支中修改文件。
-        3. 提交 PR 到主仓库，并描述修改原因。
+### 2. AI 交互流程
+请按照以下步骤指挥 AI 进行更新，**不要手动修改文件**：
 
-3.  **使用 Issues**:
-    - 如果你不熟悉 Git 操作，也可以直接在项目的 Issues 页面提出建议。
+1.  **让 AI 理解规则**：
+    *   告诉 AI："请先阅读 `README.md`，了解维护指南，特别是关于 `FEEDBACK.md` 的使用规则。"
+2.  **提交反馈或修改**：
+    *   **如果是反馈问题**：告诉 AI："请将我对场景 X 的意见 [你的意见内容] 添加到 `FEEDBACK.md` 中。"
+    *   **如果是修正错误**（需确保已确认可行）：告诉 AI："请根据 `FEEDBACK.md` 中的确认项，修正 `01_选品研究报告.md` 中的数据错误，并保持格式一致。"
+3.  **自动化提交**：
+    *   让 AI 执行 Git 操作："请将修改提交到 Git，Commit 信息为 'docs: update feedback for scenario X'，并 Push 到远程仓库。"
+
+### 3. 提交 Pull Request
+1.  回到 GitHub 的原始仓库页面。
+2.  你会看到 "Compare & pull request" 的提示，点击它。
+3.  填写描述，提交 PR 等待合并。
 
 ## 下一步计划
 - 收集并修正报告中的问题。
